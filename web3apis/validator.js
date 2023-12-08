@@ -90,14 +90,31 @@ async function getWalletTokenBalances() {
 }
 
 // Main function to control the flow
-async function main() {
+// Main function to control the flow based on user-defined rules
+async function main(rules) {
   await initializeMoralis();
 
-  // Example function calls
-  // await getNativeBalances();
-  // await ensLookup();
-  // await getWalletStats();
-  // await getWalletTokenBalances();
+  // Check each rule and call the associated function if the rule is true
+  if (rules.getNativeBalances) {
+    await getNativeBalances();
+  }
+  if (rules.ensLookup) {
+    await ensLookup();
+  }
+  if (rules.getWalletStats) {
+    await getWalletStats();
+  }
+  if (rules.getWalletTokenBalances) {
+    await getWalletTokenBalances();
+  }
 }
 
-main().catch(console.error);
+// rules object
+const userRules = {
+  getNativeBalances: true,
+  ensLookup: false,
+  getWalletStats: true,
+  getWalletTokenBalances: false,
+};
+
+main(userRules).catch(console.error);
