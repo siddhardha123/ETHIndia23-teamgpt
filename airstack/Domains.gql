@@ -1,0 +1,10 @@
+query MyQuery($_eq: Identity, $blockchain: Blockchain!) {
+  Domains(input: {filter: {owner: {_eq: $_eq}}, blockchain: $blockchain}) {
+    Domain {
+      name
+      owner
+      blockchain
+      dappName
+    }
+  }
+}
