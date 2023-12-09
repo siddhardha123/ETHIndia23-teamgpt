@@ -17,6 +17,7 @@ import {
   WrapItem,
 } from '@chakra-ui/react'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify'
 
 const MyFormModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -25,6 +26,7 @@ const MyFormModal = () => {
   const [walletAddress, setWalletAddress] = useState('')
   const [socialLinks, setSocialLinks] = useState([])
   const [profileImage, setProfileImage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const { address } = useAccount()
 
   const handleSubmit = async (e) => {
@@ -51,19 +53,55 @@ const MyFormModal = () => {
       }
 
       const response = await axios.post(
-          'http://localhost:3001/api/orgs',
-          formData,
-          { headers }
+        'http://localhost:3001/api/orgs',
+        formData,
+        { headers }
       )
+
+      if (response.status === 500 || response.status === 400)
+        setErrorMessage(response)
 
       if (response.status === 200) {
         console.log('Successfully submitted the form')
+        toast.success('Successfully submitted the form!', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        })
         onClose()
       } else {
         console.error('Failed to submit the form')
+        toast.error('Failed to submit the form', {
+          position: 'top-right',
+          autoClose: 20000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        })
       }
     } catch (error) {
-      console.error('An error occurred while submitting the form:', error)
+      console.error(
+        'An error occurred while submitting the form:',
+        errorMessage
+      )
+        toast.error('Wallet address already exists in the database', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'dark',
+        })
     }
   }
 
@@ -84,98 +122,99 @@ const MyFormModal = () => {
   }
 
   return (
-      <>
-        <WrapItem>
-          <Button colorScheme='teal' onClick={onOpen}>
-            Join us now
-          </Button>
-        </WrapItem>
+    <>
+      <ToastContainer />
+      <WrapItem>
+        <Button colorScheme='teal' onClick={onOpen}>
+          Join us now
+        </Button>
+      </WrapItem>
 
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Create Your Profile</ModalHeader>
-            <ModalCloseButton />
-            <form onSubmit={handleSubmit}>
-              <ModalBody>
-                <FormControl mb='4'>
-                  <FormLabel>Name</FormLabel>
-                  <Input value={name} onChange={(e) => setName(e.target.value)} />
-                </FormControl>
-                <FormControl mb='4'>
-                  <FormLabel>Description</FormLabel>
-                  <Textarea
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                  />
-                </FormControl>
-                <FormControl mb='4'>
-                  <FormLabel>Wallet Address</FormLabel>
-                  <Input
-                      value={walletAddress || address}
-                      onChange={(e) => setWalletAddress(e.target.value)}
-                  />
-                </FormControl>
-                {socialLinks.map((link, index) => (
-                    <div key={index}>
-                      <FormControl mb='4'>
-                        <FormLabel>Social Platform</FormLabel>
-                        <Input
-                            value={link.platform}
-                            placeholder='Twitter or Github'
-                            onChange={(e) =>
-                                handleSocialLinkChange(
-                                    index,
-                                    'platform',
-                                    e.target.value
-                                )
-                            }
-                        />
-                      </FormControl>
-                      <FormControl mb='4'>
-                        <FormLabel>Social Link</FormLabel>
-                        <Input
-                            value={link.link}
-                            onChange={(e) =>
-                                handleSocialLinkChange(index, 'link', e.target.value)
-                            }
-                        />
-                      </FormControl>
-                      <Button
-                          variant='ghost'
-                          colorScheme='red'
-                          border='1px solid red'
-                          mb='8'
-                          onClick={() => removeSocialLink(index)}
-                      >
-                        Remove Social Link
-                      </Button>
-                    </div>
-                ))}
-                <Button colorScheme='blue' mb='4' onClick={addSocialLink}>
-                  Add Social Link
-                </Button>
-                <FormControl mb='4'>
-                  <FormLabel>Profile Image URL</FormLabel>
-                  <Input
-                      value={profileImage}
-                      onChange={(e) => setProfileImage(e.target.value)}
-                  />
-                </FormControl>
-              </ModalBody>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create Your Profile</ModalHeader>
+          <ModalCloseButton />
+          <form onSubmit={handleSubmit}>
+            <ModalBody>
+              <FormControl mb='4'>
+                <FormLabel>Name</FormLabel>
+                <Input value={name} onChange={(e) => setName(e.target.value)} />
+              </FormControl>
+              <FormControl mb='4'>
+                <FormLabel>Description</FormLabel>
+                <Textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </FormControl>
+              <FormControl mb='4'>
+                <FormLabel>Wallet Address</FormLabel>
+                <Input
+                  value={walletAddress || address}
+                  onChange={(e) => setWalletAddress(e.target.value)}
+                />
+              </FormControl>
+              {socialLinks.map((link, index) => (
+                <div key={index}>
+                  <FormControl mb='4'>
+                    <FormLabel>Social Platform</FormLabel>
+                    <Input
+                      value={link.platform}
+                      placeholder='Twitter or Github'
+                      onChange={(e) =>
+                        handleSocialLinkChange(
+                          index,
+                          'platform',
+                          e.target.value
+                        )
+                      }
+                    />
+                  </FormControl>
+                  <FormControl mb='4'>
+                    <FormLabel>Social Link</FormLabel>
+                    <Input
+                      value={link.link}
+                      onChange={(e) =>
+                        handleSocialLinkChange(index, 'link', e.target.value)
+                      }
+                    />
+                  </FormControl>
+                  <Button
+                    variant='ghost'
+                    colorScheme='red'
+                    border='1px solid red'
+                    mb='8'
+                    onClick={() => removeSocialLink(index)}
+                  >
+                    Remove Social Link
+                  </Button>
+                </div>
+              ))}
+              <Button colorScheme='blue' mb='4' onClick={addSocialLink}>
+                Add Social Link
+              </Button>
+              <FormControl mb='4'>
+                <FormLabel>Profile Image URL</FormLabel>
+                <Input
+                  value={profileImage}
+                  onChange={(e) => setProfileImage(e.target.value)}
+                />
+              </FormControl>
+            </ModalBody>
 
-              <ModalFooter>
-                <Button colorScheme='blue' mr={3} type='submit'>
-                  Save
-                </Button>
-                <Button variant='ghost' onClick={onClose}>
-                  Cancel
-                </Button>
-              </ModalFooter>
-            </form>
-          </ModalContent>
-        </Modal>
-      </>
+            <ModalFooter>
+              <Button colorScheme='blue' mr={3} type='submit'>
+                Save
+              </Button>
+              <Button variant='ghost' onClick={onClose}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </form>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
 

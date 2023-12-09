@@ -17,6 +17,8 @@ import {
     trustWallet,
 } from '@rainbow-me/rainbowkit/wallets'
 import { LandingHero } from './components/LandingHero'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const { chains, publicClient } = configureChains(
     [mainnet, polygon, optimism, arbitrum, base, zora],
@@ -55,16 +57,22 @@ const wagmiConfig = createConfig({
 
 function App() {
     return (
-        <WagmiConfig config={wagmiConfig}>
-            <RainbowKitProvider chains={chains} theme={darkTheme()}>
-                <ChakraProvider>
-                    <VStack minHeight='100vh' display='flex' justifyContent='center' backgroundColor='black'>
-                        <Navbar />
-                        <LandingHero />
-                    </VStack>
-                </ChakraProvider>
-            </RainbowKitProvider>
-        </WagmiConfig>
+      <WagmiConfig config={wagmiConfig}>
+        <RainbowKitProvider chains={chains} theme={darkTheme()}>
+          <ChakraProvider>
+            <ToastContainer />
+            <VStack
+              minHeight='100vh'
+              display='flex'
+              justifyContent='center'
+              backgroundColor='black'
+            >
+              <Navbar />
+              <LandingHero />
+            </VStack>
+          </ChakraProvider>
+        </RainbowKitProvider>
+      </WagmiConfig>
     )
 }
 
