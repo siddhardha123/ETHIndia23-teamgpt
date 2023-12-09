@@ -11,9 +11,11 @@ import {
   MenuItem,
   Text,
   Heading,
+  HStack,
 } from '@chakra-ui/react'
 import { useAccount } from 'wagmi'
 import { ToastContainer, toast } from 'react-toastify'
+import Papa from 'papaparse'
 
 const Fields = {
   NO_OF_TXNS: 'no_of_transactions',
@@ -93,6 +95,39 @@ const DashboardPage = () => {
     }
   }
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0]
+    Papa.parse(file, {
+      header: true,
+      complete: (results) => {
+        const filteredData = results.data.filter(
+          (row) => row.wallet_address && row.github_username
+        )
+
+        const formattedData = filteredData.map((row) => ({
+          wallet_address: row.wallet_address,
+          github_username: row.github_username,
+        }))
+
+        sendPostRequest(formattedData)
+      },
+    })
+  }
+
+   const sendPostRequest = (data) => {
+    console.log('id', walletId)
+     fetch(`http://localhost:3001/api/orgs/${walletId}/dump`, {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify(data),
+     })
+       .then((response) => response.json())
+       .then((data) => console.log(data))
+       .catch((error) => console.error('Error:', error))
+   }
+
   return (
     <VStack spacing={4} alignItems='stretch'>
       <ToastContainer />
@@ -144,9 +179,17 @@ const DashboardPage = () => {
         </Flex>
       ))}
       <VStack mt='50px'>
-        <Button maxW='10vw' onClick={handleAddRow}>
+        <Button maxW='150px' onClick={handleAddRow}>
           Add Another Rule
         </Button>
+        <HStack>
+          <Button as='label'>Upload CSV</Button>
+          <input
+            type='file'
+            accept='.csv'
+            onChange={handleFileUpload}
+          />
+        </HStack>
         <Button maxW='10vw' onClick={handleSubmit}>
           Submit
         </Button>

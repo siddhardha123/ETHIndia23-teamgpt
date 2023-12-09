@@ -49,7 +49,7 @@ const MyFormModal = () => {
     const formData = {
       name,
       description,
-      wallet_address: '0xB3750adb845CeE350Ca0B6CE68B71037245E3A01',
+      wallet_address: '0xB3750adb845CeE350Ca0B6CE68B71037245E3A48',
       social_links: socials,
       profile_image: profileImage,
       size,
