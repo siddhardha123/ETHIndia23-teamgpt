@@ -12,6 +12,12 @@ import {
   Text,
   Heading,
   HStack,
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Td,
 } from '@chakra-ui/react'
 import { useAccount } from 'wagmi'
 import { ToastContainer, toast } from 'react-toastify'
@@ -109,24 +115,159 @@ const DashboardPage = () => {
           github_username: row.github_username,
         }))
 
-        sendPostRequest(formattedData)
+        sendPostRequest({ userData: formattedData })
       },
     })
   }
 
-   const sendPostRequest = (data) => {
+  const sendPostRequest = (data) => {
     console.log('id', walletId)
-     fetch(`http://localhost:3001/api/orgs/${walletId}/dump`, {
-       method: 'POST',
-       headers: {
-         'Content-Type': 'application/json',
-       },
-       body: JSON.stringify(data),
-     })
-       .then((response) => response.json())
-       .then((data) => console.log(data))
-       .catch((error) => console.error('Error:', error))
-   }
+    fetch(`http://localhost:3001/api/orgs/${walletId}/dump`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error('Error:', error))
+  }
+
+  const data = [
+    {
+      wallet_balance: '0.808680858499567549',
+      no_of_nfts: '3',
+      no_of_transactions: '54',
+      github_username: 'Abbigail73',
+      github_public_repos: '2',
+      github_followers: '6',
+      xp: 5240.251963077197,
+      level: 4,
+    },
+    {
+      wallet_balance: '0.0',
+      no_of_nfts: '0',
+      no_of_transactions: '0',
+      github_username: 'Roosevelt_Koss8',
+      github_public_repos: '7',
+      github_followers: '7',
+      xp: 0,
+      level: 0,
+    },
+    {
+      wallet_balance: '0.0',
+      no_of_nfts: '446',
+      no_of_transactions: '2454',
+      github_username: 'Jessica39',
+      github_public_repos: '3',
+      github_followers: '9',
+      xp: 0,
+      level: 0,
+    },
+    {
+      wallet_balance: '0.0',
+      no_of_nfts: '1964',
+      no_of_transactions: '4317',
+      github_username: 'Mercedes.Mayer',
+      github_public_repos: '3',
+      github_followers: '7',
+      xp: 0,
+      level: 0,
+    },
+    {
+      wallet_balance: '0.0',
+      no_of_nfts: '0',
+      no_of_transactions: '0',
+      github_username: 'Oceane15',
+      github_public_repos: '2',
+      github_followers: '4',
+      xp: 0,
+      level: 0,
+    },
+    {
+      wallet_balance: '0.0',
+      no_of_nfts: '0',
+      no_of_transactions: '0',
+      github_username: 'Vincent.Crooks93',
+      github_public_repos: '3',
+      github_followers: '1',
+      xp: 0,
+      level: 0,
+    },
+    {
+      wallet_balance: '0.0',
+      no_of_nfts: '0',
+      no_of_transactions: '0',
+      github_username: 'Kianna_Gleichner83',
+      github_public_repos: '9',
+      github_followers: '2',
+      xp: 0,
+      level: 0,
+    },
+    {
+      wallet_balance: '0.0',
+      no_of_nfts: '0',
+      no_of_transactions: '0',
+      github_username: 'Ansel50',
+      github_public_repos: '8',
+      github_followers: '3',
+      xp: 0,
+      level: 0,
+    },
+    {
+      wallet_balance: '0.0',
+      no_of_nfts: '0',
+      no_of_transactions: '0',
+      github_username: 'Corene.Lehner28',
+      github_public_repos: '9',
+      github_followers: '3',
+      xp: 0,
+      level: 0,
+    },
+    {
+      wallet_balance: '0.0',
+      no_of_nfts: '0',
+      no_of_transactions: '0',
+      github_username: 'Maribel.Raynor93',
+      github_public_repos: '4',
+      github_followers: '8',
+      xp: 0,
+      level: 0,
+    },
+  ]
+
+  const DataTable = () => (
+    <Table variant='simple' colorScheme='teal'>
+      <Thead>
+        <Tr>
+          <Th>Wallet Balance</Th>
+          <Th>No. of NFTs</Th>
+          <Th>No. of Transactions</Th>
+          <Th>Github Username</Th>
+          <Th>Github Public Repos</Th>
+          <Th>Github Followers</Th>
+          <Th>XP</Th>
+          <Th>Level</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {data.map((item, index) => (
+          <Tr key={index}>
+            <Td color='white'>{parseFloat(item.wallet_balance).toFixed(2)}</Td>
+            <Td color='white'>{item.no_of_nfts}</Td>
+            <Td color='white'>{item.no_of_transactions}</Td>
+            <Td color='white'>{item.github_username}</Td>
+            <Td color='white'>{item.github_public_repos}</Td>
+            <Td color='white'>{item.github_followers}</Td>
+            <Td color='white'>{item.xp}</Td>
+            <Td color='white'>{item.level}</Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </Table>
+  )
+
 
   return (
     <VStack spacing={4} alignItems='stretch'>
@@ -184,12 +325,10 @@ const DashboardPage = () => {
         </Button>
         <HStack>
           <Button as='label'>Upload CSV</Button>
-          <input
-            type='file'
-            accept='.csv'
-            onChange={handleFileUpload}
-          />
+          <input type='file' accept='.csv' onChange={handleFileUpload} />
         </HStack>
+        {/* Add table below */}
+        <DataTable />
         <Button maxW='10vw' onClick={handleSubmit}>
           Submit
         </Button>

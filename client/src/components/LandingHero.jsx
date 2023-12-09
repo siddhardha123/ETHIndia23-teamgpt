@@ -1,17 +1,33 @@
 import {
   Box,
   Flex,
+  HStack,
   Heading,
   Stack,
   Text,
-  chakra,
+  VStack,
 } from '@chakra-ui/react'
 import OrgDetailsModal from './OrgDetailsModal.jsx'
 import { useEffect, useState } from 'react'
 import Card from './Card.jsx'
+import { useAccount } from 'wagmi'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export const LandingHero = () => {
   const [orgs, setOrgs] = useState([])
+  const { address } = useAccount()
+  const [file, setFile] = useState(false)
+
+  const handleFileUpload = (event) => {
+    const uploadedFile = event.target.files[0]
+    if (uploadedFile) {
+      setFile(uploadedFile) // Save the file to the state
+      toast.success(`${uploadedFile.name} has been uploaded successfully.`)
+      setFile(true);
+    }
+  }
+
   useEffect(() => {
     fetch('http://localhost:3001/api/orgs').then((response) =>
       response.json().then((data) => {
@@ -29,42 +45,149 @@ export const LandingHero = () => {
       w={{ base: 'full', md: 11 / 12, xl: 9 / 12 }}
       spacing={{ base: '4', lg: '8' }}
     >
-      <Heading
-        mb={6}
-        fontSize={{ base: '4xl', md: '6xl', lg: '8xl' }}
-        fontWeight='bold'
-        lineHeight='none'
-        textAlign='center'
-        letterSpacing={{ base: 'normal', md: 'tight' }}
-        color='gray.600'
-        _dark={{
-          color: 'gray.100',
-        }}
-      >
-        Make{' '}
+      <ToastContainer />
+      <HStack display='flex' justifyContent='center'>
         <Text
-          display='inline'
-          w='full'
-          bgClip='text'
-          bgGradient='linear(to-r, green.400,purple.500)'
-          fontWeight='extrabold'
+          w='600px'
+          color='#FFF'
+          textAlign='center'
+          fontSize='70px'
+          fontWeight='900'
+          lineHeight='normal'
+          letterSpacing='0.7px'
         >
-          your events{' '}
+          Vampire Attacks Simplified
+          <span style={{ color: 'yellow' }}>.</span>
         </Text>
-        get the{' '}
-        <Text
-          display='inline'
-          w='full'
-          bgClip='text'
-          bgGradient='linear(to-r, green.400,purple.500)'
-          fontWeight='extrabold'
-        >
-          reach
-        </Text>{' '}
-        you want it to get...
-      </Heading>
+      </HStack>
 
-      <chakra.p
+      <Box
+        w='70vw'
+        h='70px'
+        display='flex'
+        justifyContent='space-between'
+        p='20px'
+        alignItems='center'
+        style={{
+          background: 'rgba(255, 255, 255, 0.06)',
+          borderRadius: '50px',
+        }}
+        cursor={!address && 'not-allowed'}
+        opacity={!address && '15%'}
+      >
+        <Box
+          w='250px'
+          h='50px'
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          cursor={address && 'pointer'}
+        >
+          <label
+            htmlFor='file-upload'
+            style={{ cursor: `${address && 'pointer'}` }}
+          >
+            {file ? (
+              <Text fontSize='20px' color='white'>
+                + Upload your Allow
+              </Text>
+            ) : (
+              <Text fontSize='20px' color='white'>
+                + Upload your Allowlist
+              </Text>
+            )}
+          </label>
+          <input
+            id='file-upload'
+            type='file'
+            accept='.csv'
+            disabled={!address}
+            style={{ display: 'none' }}
+            onChange={handleFileUpload}
+          />
+        </Box>
+        <Box
+          w='150px'
+          h='50px'
+          style={{
+            backgroundColor: '#8575FF',
+            borderRadius: '50px',
+          }}
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          cursor={address && 'pointer'}
+        >
+          <Text color='white'>Get Started</Text>
+        </Box>
+      </Box>
+
+      <HStack>
+        <Box
+          maxW='xs'
+          overflow='hidden'
+          p={6}
+          m={4}
+          bg='gray.700'
+          background='rgba(255, 255, 255, 0.06)'
+          color='white'
+          borderRadius='30px'
+          minH='250px'
+        >
+          <VStack spacing={4} align='flex-start'>
+            <Text fontSize='24px' fontWeight='bold'>
+              Advanced Querying
+            </Text>
+            <Text fontSize='16px'>
+              Leverage advanced filters to identify EVM wallets that align with
+              your campaign goals.
+            </Text>
+          </VStack>
+        </Box>
+        <Box
+          maxW='xs'
+          overflow='hidden'
+          p={6}
+          m={4}
+          bg='gray.700'
+          background='rgba(255, 255, 255, 0.06)'
+          color='white'
+          borderRadius='30px'
+          minH='250px'
+        >
+          <VStack spacing={4} align='flex-start'>
+            <Text fontSize='24px' fontWeight='bold'>
+              Streamlined Airdropping
+            </Text>
+            <Text fontSize='16px'>
+              Seamless NFT Distribution: Automate your airdrop process with our
+              intuitive platform, ensuring precision and efficiency.
+            </Text>
+          </VStack>
+        </Box>
+        <Box
+          maxW='xs'
+          overflow='hidden'
+          p={6}
+          m={4}
+          bg='gray.700'
+          background='rgba(255, 255, 255, 0.06)'
+          color='white'
+          borderRadius='30px'
+          minH='250px'
+        >
+          <VStack spacing={4} align='flex-start'>
+            <Text fontSize='24px' fontWeight='bold'>
+              Impactful Marketing Tool
+            </Text>
+            <Text fontSize='16px'>
+              Maximize Engagement: Employ a strategic approach to enhance your
+              project&apos;s visibility and appeal to a targeted web3 community.
+            </Text>
+          </VStack>
+        </Box>
+      </HStack>
+      {/* <chakra.p
         mb={6}
         fontSize={{ base: 'lg', md: 'xl' }}
         color='gray.600'
@@ -77,7 +200,7 @@ export const LandingHero = () => {
         autem minima. Reprehenderit beatae quasi, atque quos molestiae veritatis
         ipsam quia soluta sit! Quis excepturi laboriosam consequatur incidunt
         minus molestiae!
-      </chakra.p>
+      </chakra.p> */}
       <Box
         style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}
       >
@@ -96,7 +219,7 @@ export const LandingHero = () => {
           color: 'gray.100',
         }}
       >
-        Orgs that have already registered with us!
+        {'Organizations that have already registered with us :) !'}
       </Heading>
       <Flex flexWrap='wrap' justifyContent='center'>
         {orgs.map((org) => (

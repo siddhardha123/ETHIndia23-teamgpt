@@ -142,8 +142,8 @@ const MyFormModal = () => {
             Open Dashboard
           </Button>
         ) : (
-          <Button colorScheme='teal' onClick={onOpen}>
-            Join us now
+          <Button colorScheme='yellow' onClick={onOpen}>
+            Join us Now!
           </Button>
         )}
       </WrapItem>
