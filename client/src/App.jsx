@@ -1,35 +1,71 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { ChakraProvider, VStack } from '@chakra-ui/react'
+import Navbar from './components/Navbar'
+import '@rainbow-me/rainbowkit/styles.css'
+import {
+    connectorsForWallets,
+    getDefaultWallets,
+    RainbowKitProvider,
+    darkTheme
+} from '@rainbow-me/rainbowkit'
+import { configureChains, createConfig, WagmiConfig } from 'wagmi'
+import { mainnet, polygon, optimism, arbitrum, base, zora } from 'wagmi/chains'
+import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { publicProvider } from 'wagmi/providers/public'
+import {
+    argentWallet,
+    ledgerWallet,
+    trustWallet,
+} from '@rainbow-me/rainbowkit/wallets'
+import { LandingHero } from './components/LandingHero'
+
+const { chains, publicClient } = configureChains(
+    [mainnet, polygon, optimism, arbitrum, base, zora],
+    [
+        alchemyProvider({ apiKey: 'f3xicYBOhro15VSMDun6KO0zysLe9sdR' }),
+        publicProvider(),
+    ]
+)
+
+const projectId = '17dd157202ff60d13ea968c48fe8b988'
+
+const { wallets } = getDefaultWallets({
+    appName: 'My RainbowKit App',
+    projectId,
+    chains,
+})
+
+const connectors = connectorsForWallets([
+    ...wallets,
+    {
+        groupName: 'Other',
+        wallets: [
+            argentWallet({ projectId, chains }),
+            trustWallet({ projectId, chains }),
+            ledgerWallet({ projectId, chains }),
+        ],
+    },
+])
+
+const wagmiConfig = createConfig({
+    autoConnect: true,
+    connectors,
+    publicClient,
+})
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <WagmiConfig config={wagmiConfig}>
+            <RainbowKitProvider chains={chains} theme={darkTheme()}>
+                <ChakraProvider>
+                    <VStack minHeight='100vh' display='flex' justifyContent='center' backgroundColor='black'>
+                        <Navbar />
+                        <LandingHero />
+                    </VStack>
+                </ChakraProvider>
+            </RainbowKitProvider>
+        </WagmiConfig>
+    )
 }
 
 export default App

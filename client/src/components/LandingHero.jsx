@@ -1,5 +1,5 @@
 import { Box, Text, VStack, Heading } from '@chakra-ui/react'
-import OrgDetailsModal from './OrgDetailsModal'
+import OrgDetailsModal from './OrgDetailsModal.jsx'
 
 export const LandingHero = () => {
   return (
