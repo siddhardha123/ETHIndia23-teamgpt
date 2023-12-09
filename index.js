@@ -14,14 +14,15 @@ const connection = mongoose.connection;
 connection.once('open', () => {
     console.log('MongoDB database connection established successfully');
 });
-
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors())
 app.use(bodyParser.json());
 
 const orgRoutes = require('./routes/org.router');
-const {initializeMoralis} = require("./Web3Gates/web3rules");
 app.use('/api', orgRoutes);
-
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
 app.listen(PORT, async () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
