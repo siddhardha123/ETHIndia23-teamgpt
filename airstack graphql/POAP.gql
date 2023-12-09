@@ -1,0 +1,18 @@
+query MyQuery($_eq: Identity, $blockchain: EveryBlockchain!, $limit: Int) {
+  Poaps(
+    input: {filter: {owner: {_eq: $_eq}}, blockchain: $blockchain, limit: $limit}
+  ) {
+    Poap {
+      eventId
+      tokenId
+      owner {
+        identity
+        addresses
+      }
+    }
+    pageInfo {
+      nextCursor
+      prevCursor
+    }
+  }
+}

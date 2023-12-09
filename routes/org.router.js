@@ -10,6 +10,11 @@ router.get('/orgs/:id',orgController.getOrgById)
 // rules routes
 router.post('/orgs/:id/rules',orgController.saveOrUpdateRules)
 router.get('/orgs/:id/rules',orgController.getLatestRulesByOrgId)
-// Add other org-related routes as needed
+
+// data dump
+router.post('/orgs/:id/dump',orgController.dumpUserData)
+
+//get _id with wallet address
+router.get('/orgs/id/:wallet_address',orgController.getIdWithWalletAddress)
 
 module.exports = router;
