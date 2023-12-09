@@ -1,0 +1,10 @@
+query FetchBulkENS($resolvedAddresses: [Address!]) {
+  Domains(
+    input: {filter: {isPrimary: {_eq: true}, resolvedAddress: {_in: $resolvedAddresses}}, blockchain: ethereum, limit: 200}
+  ) {
+    Domain {
+      name
+      resolvedAddress
+    }
+  }
+}

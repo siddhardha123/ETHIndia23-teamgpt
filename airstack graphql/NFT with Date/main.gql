@@ -1,0 +1,9 @@
+query MyQuery($_eq: Identity, $_eq1: Address, $blockchain: TokenBlockchain!, $limit: Int, $blockTimestamp: OrderBy) {
+  Ethereum: TokenTransfers(
+    input: {filter: {to: {_eq: $_eq}, tokenAddress: {_eq: $_eq1}}, blockchain: $blockchain, limit: $limit, order: {blockTimestamp: $blockTimestamp}}
+  ) {
+    TokenTransfer {
+      blockTimestamp
+    }
+  }
+}

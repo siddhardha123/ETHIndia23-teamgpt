@@ -1,0 +1,13 @@
+query BulkFetchPrimaryENSandXMTP($address: [Identity!]) {
+  XMTPs(input: {blockchain: ALL, filter: {owner: {_in: $address}}}) {
+    XMTP {
+      isXMTPEnabled
+      owner {
+        addresses
+        primaryDomain {
+          name
+        }
+      }
+    }
+  }
+}
