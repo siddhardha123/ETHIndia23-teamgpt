@@ -2,6 +2,7 @@ const Org = require('../models/org');
 const Rules = require('../models/rules')
 const {mandatoryMap,mandatoryFields} = require('../constants/fields')
 const {getGitHubUsersInfo} = require('../services/github.service')
+const {getLevel} = require('../helper')
 const {main} = require('../Web3Gates/web3rules')
 const createOrg = async (req, res) => {
     try {
@@ -106,7 +107,13 @@ const dumpUserData = async (req,res) => {
         const {userData} = req.body
         const walletData = await _getWalletData(userData)
         const githubData = await _getGithubData(userData)
-        res.status(200).json({walletData,githubData})
+        const actionableData = await  _getActionableData(walletData,githubData)
+        const rules = await Rules.findOne({org_id : id})
+        const orgRules = rules.rules
+        const xpValues = await _getXpValues(orgRules,actionableData)
+        // console.log(orgRules)
+
+        res.status(200).json({xpValues})
     }catch (error){
         res.status(500).json(error);
     }
@@ -151,6 +158,55 @@ const _getWalletData = async(userData) => {
     // console.log(walletData)
 
 }
+
+const _getActionableData = async(walletData,githubDetails) => {
+    const userDataArray = [];
+    for (let i=0;i<githubDetails.length;i++) {
+
+        const walletBalance = walletData.walletBalance.raw[0].wallet_balances[i]
+        const walletStats = walletData.walletStats[i].raw
+        const githubData = githubDetails[i];
+        const userObject = {
+             wallet_balance : walletBalance.balance_formatted,
+             no_of_nfts : walletStats.nfts,
+             no_of_transactions : walletStats.transactions.total,
+             github_username : githubData.user_name,
+             github_public_repos : githubData.public_repos,
+             github_followers : githubData.followers,
+        };
+
+        userDataArray.push(userObject);
+    }
+
+    return userDataArray
+
+}
+
+const _getXpValues = (orgRules, actionableData) => {
+    const users = actionableData;
+    const rules = orgRules;
+    const calculateXP = (user) => {
+        let xp = 1;
+
+        // Iterate through rules and calculate XP based on user data
+        for (const [key, value] of Object.entries(rules)) {
+            xp *= parseFloat(user[key]) * parseFloat(value);
+        }
+
+        return xp;
+    };
+
+    // Calculate XP for each user and update the data
+    const usersWithXP = users.map(user => ({
+        ...user,
+        xp: calculateXP(user),
+        level : getLevel(calculateXP(user))
+    }));
+
+
+
+    return usersWithXP;
+};
 
 
 
