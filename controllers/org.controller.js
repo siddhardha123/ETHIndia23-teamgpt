@@ -2,12 +2,12 @@ const Org = require('../models/org');
 const Rules = require('../models/rules')
 const {mandatoryMap,mandatoryFields} = require('../constants/fields')
 const {getGitHubUsersInfo} = require('../services/github.service')
+const {main} = require('../Web3Gates/web3rules')
 const createOrg = async (req, res) => {
     try {
         const { name, description, social_links, profile_image, wallet_address } = req.body;
 
         const existingOrg = await Org.findOne({ wallet_address });
-
         if (existingOrg) {
             return res.status(400).json({ error: "Wallet address already exists in the database" });
         }
@@ -85,13 +85,28 @@ const getLatestRulesByOrgId = async (req, res) => {
     }
 };
 
+const getIdWithWalletAddress =async(req,res) => {
+  try{
+       const wallet_address = req.params.wallet_address
+      const existingOrg = await Org.findOne({ wallet_address });
+      if(!existingOrg){
+         return res.status(404).json({ success: false, message: 'no org exists with this wallet address' });
+      }
+      const {_id} = existingOrg
+      return res.status(200).json({success:true, id :_id})
+  }catch (e){
+      console.error('Error fetching latest rules:', e);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+}
+
 const dumpUserData = async (req,res) => {
     const {id} = req.params
     try{
-       // const validatedData = _validateDumpData({id,... req.body})
         const {userData} = req.body
         const walletData = await _getWalletData(userData)
         const githubData = await _getGithubData(userData)
+        res.status(200).json({walletData,githubData})
     }catch (error){
         res.status(500).json(error);
     }
@@ -112,18 +127,32 @@ const dumpUserData = async (req,res) => {
 //
 // }
 const _getGithubData = async (userData) => {
-    let  githubUserNames = []
-    userData.forEach((user)=>{
-        githubUserNames.push(user.github_username)
-    })
-    const data = await getGitHubUsersInfo(githubUserNames)
+    try {
 
-    return data
+        const response = await fetch(process.env.GITHUB_API);
+
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        } else {
+            console.error(`Error: ${response.status} - ${response.statusText}`);
+            return null;
+        }
+    } catch (error) {
+        console.error("An error occurred while fetching data:", error);
+        return null;
+    }
 }
 
 const _getWalletData = async(userData) => {
+   let walletAdds = userData.map(user=>user.wallet_address)
+    const walletData = await main(walletAdds)
+    return walletData
+    // console.log(walletData)
 
 }
+
+
 
 module.exports = {
     createOrg,
@@ -131,5 +160,7 @@ module.exports = {
     saveOrUpdateRules,
     getOrgById,
     getLatestRulesByOrgId,
+    dumpUserData,
+    getIdWithWalletAddress
 }
 
