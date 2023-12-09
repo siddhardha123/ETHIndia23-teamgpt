@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import {
   VStack,
-  Heading,
   Input,
   Button,
   Flex,
@@ -10,8 +9,11 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Text,
+  Heading,
 } from '@chakra-ui/react'
 import { useAccount } from 'wagmi'
+import { ToastContainer, toast } from 'react-toastify'
 
 const Fields = {
   NO_OF_TXNS: 'no_of_transactions',
@@ -28,14 +30,12 @@ const DashboardPage = () => {
   const { address } = useAccount()
 
   useEffect(() => {
-    fetch(
-      `http://localhost:3001/api/orgs/id/${address}`
-    )
+    fetch(`http://localhost:3001/api/orgs/id/${address}`)
       .then((response) => response.json())
-      .then((data) => setWalletId(data.wallet_id))
+      .then((data) => {
+        setWalletId(data.id)
+      })
       .catch((error) => console.error('Error fetching wallet ID:', error))
-
-      console.log("www", walletId)
   }, [])
 
   const handleAddRow = () => {
@@ -60,14 +60,6 @@ const DashboardPage = () => {
     setFields(updatedFields)
   }
 
-//   const handleSubmit = () => {
-//     const rules = fields.reduce((acc, field) => {
-//       acc[Fields[field.option.toUpperCase().split(' ').join('_')]] = field.value
-//       return acc
-//     }, {})
-//     console.log({ rules })
-//   }
-
   const handleSubmit = () => {
     const rules = fields.reduce((acc, field) => {
       acc[Fields[field.option.toUpperCase().split(' ').join('_')]] = field.value
@@ -83,19 +75,45 @@ const DashboardPage = () => {
         body: JSON.stringify({ rules }),
       })
         .then((response) => response.json())
-        .then((data) => console.log('Success:', data))
+        .then((data) =>
+          toast.success(`${data.message}`, {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          })
+        )
         .catch((error) => console.error('Error:', error))
     } else {
       console.error('Wallet ID not available')
     }
   }
 
-
   return (
     <VStack spacing={4} alignItems='stretch'>
-      <Heading size='lg' color='white'>
-        Dashboard
+      <ToastContainer />
+      <Heading
+        mb={6}
+        fontSize={{ base: 'xl', md: '2xl', lg: '4xl' }}
+        fontWeight='bold'
+        lineHeight='none'
+        textAlign='center'
+        letterSpacing={{ base: 'normal', md: 'tight' }}
+        color='gray.600'
+        _dark={{
+          color: 'gray.100',
+        }}
+      >
+        - Input how much XP you want to equate for one unit of the action -
       </Heading>
+      <Text fontSize={18} color='white'>
+        Example: 1 Unit of Action = X Score
+      </Text>
+
       {fields.map((field, index) => (
         <Flex key={index} alignItems='center'>
           <Menu>
@@ -117,6 +135,7 @@ const DashboardPage = () => {
           <Input
             type='number'
             flex='2'
+            style={{ color: 'white' }}
             value={field.value}
             onChange={(e) => handleFieldChange(index, 'value', e.target.value)}
           />
@@ -124,8 +143,14 @@ const DashboardPage = () => {
           <Button onClick={() => handleRemoveRow(index)}>Remove</Button>
         </Flex>
       ))}
-      <Button onClick={handleAddRow}>Add Another Rule</Button>
-      <Button onClick={handleSubmit}>Submit</Button>
+      <VStack mt='50px'>
+        <Button maxW='10vw' onClick={handleAddRow}>
+          Add Another Rule
+        </Button>
+        <Button maxW='10vw' onClick={handleSubmit}>
+          Submit
+        </Button>
+      </VStack>
     </VStack>
   )
 }

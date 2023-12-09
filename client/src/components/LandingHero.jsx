@@ -1,18 +1,31 @@
 import {
   Box,
+  Flex,
   Heading,
   Stack,
   Text,
   chakra,
 } from '@chakra-ui/react'
 import OrgDetailsModal from './OrgDetailsModal.jsx'
+import { useEffect, useState } from 'react'
+import Card from './Card.jsx'
 
 export const LandingHero = () => {
+  const [orgs, setOrgs] = useState([])
+  useEffect(() => {
+    fetch('http://localhost:3001/api/orgs').then((response) =>
+      response.json().then((data) => {
+        setOrgs(data)
+      })
+    )
+  })
+
   return (
     <Stack
       px={8}
       py={24}
       mx='auto'
+      mt='10vh'
       w={{ base: 'full', md: 11 / 12, xl: 9 / 12 }}
       spacing={{ base: '4', lg: '8' }}
     >
@@ -38,7 +51,7 @@ export const LandingHero = () => {
         >
           your events{' '}
         </Text>
-        get more{' '}
+        get the{' '}
         <Text
           display='inline'
           w='full'
@@ -48,7 +61,7 @@ export const LandingHero = () => {
         >
           reach
         </Text>{' '}
-        ...
+        you want it to get...
       </Heading>
 
       <chakra.p
@@ -70,6 +83,39 @@ export const LandingHero = () => {
       >
         <OrgDetailsModal />
       </Box>
+      <Heading
+        mb={6}
+        mt='10vh'
+        fontSize={{ base: '2xl', md: '4xl', lg: '6xl' }}
+        fontWeight='bold'
+        lineHeight='none'
+        textAlign='center'
+        letterSpacing={{ base: 'normal', md: 'tight' }}
+        color='gray.600'
+        _dark={{
+          color: 'gray.100',
+        }}
+      >
+        Orgs that have already registered with us!
+      </Heading>
+      <Flex flexWrap='wrap' justifyContent='center'>
+        {orgs.map((org) => (
+          <Box
+            key={org._id}
+            maxW='md'
+            width={{ base: '100%', md: '60%' }}
+            margin='2'
+          >
+            <Card
+              name={org.name}
+              description={org.description}
+              socialLinks={org.social_links}
+              profileImage={org.profile_image}
+              walletAddress={org.wallet_address}
+            />
+          </Box>
+        ))}
+      </Flex>
     </Stack>
   )
 }

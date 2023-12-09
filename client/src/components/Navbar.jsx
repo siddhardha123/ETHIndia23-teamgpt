@@ -39,7 +39,7 @@ export const LandingNavbar = () => {
           <Box as='span' color='white'>
             Out
           </Box>
-          <Box as='span' color='#fe8400'>
+          <Box as='span' color='purple.500'>
             Reach
           </Box>
         </Heading>
