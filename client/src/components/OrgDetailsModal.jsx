@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 import {
   Modal,
@@ -27,7 +27,16 @@ const MyFormModal = () => {
   const [socialLinks, setSocialLinks] = useState([])
   const [profileImage, setProfileImage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const [size, setSize] = useState('')
+  const [email, setEmail] = useState('')
   const { address } = useAccount()
+
+  const [showDashboard, setShowDashboard] = useState(false)
+  useEffect(() => {
+    if (localStorage.getItem('dashboard')) {
+      setShowDashboard(true)
+    }
+  })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -40,9 +49,11 @@ const MyFormModal = () => {
     const formData = {
       name,
       description,
-      wallet_address: address,
+      wallet_address: "abcde",
       social_links: socials,
       profile_image: profileImage,
+      size,
+      email,
     }
 
     console.log('formData', formData)
@@ -73,6 +84,7 @@ const MyFormModal = () => {
           progress: undefined,
           theme: 'dark',
         })
+        localStorage.setItem('dashboard', true)
         onClose()
       } else {
         console.error('Failed to submit the form')
@@ -92,16 +104,16 @@ const MyFormModal = () => {
         'An error occurred while submitting the form:',
         errorMessage
       )
-        toast.error('Wallet address already exists in the database', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'dark',
-        })
+      toast.error('Wallet address already exists in the database', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'dark',
+      })
     }
   }
 
@@ -125,21 +137,35 @@ const MyFormModal = () => {
     <>
       <ToastContainer />
       <WrapItem>
-        <Button colorScheme='teal' onClick={onOpen}>
-          Join us now
-        </Button>
+        {showDashboard ? (
+          <Button onClick={() => window.open('/dashboard', '_blank')}>
+            Open Dashboard
+          </Button>
+        ) : (
+          <Button colorScheme='teal' onClick={onOpen}>
+            Join us now
+          </Button>
+        )}
       </WrapItem>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create Your Profile</ModalHeader>
+          <ModalHeader>Create Your Organization Profile</ModalHeader>
           <ModalCloseButton />
           <form onSubmit={handleSubmit}>
             <ModalBody>
               <FormControl mb='4'>
                 <FormLabel>Name</FormLabel>
                 <Input value={name} onChange={(e) => setName(e.target.value)} />
+              </FormControl>
+              <FormControl mb='4'>
+                <FormLabel>No. of Employees </FormLabel>
+                <Input value={size} onChange={(e) => setSize(e.target.value)} />
+              </FormControl>
+              <FormControl mb='4'>
+                <FormLabel>Official Email ID</FormLabel>
+                <Input value={email} onChange={(e) => setEmail(e.target.value)} />
               </FormControl>
               <FormControl mb='4'>
                 <FormLabel>Description</FormLabel>
