@@ -63,6 +63,7 @@ function App() {
             <ToastContainer />
             <VStack
               minHeight='100vh'
+              width='100vw'
               display='flex'
               justifyContent='center'
               backgroundColor='black'
