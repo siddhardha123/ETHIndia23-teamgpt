@@ -111,7 +111,6 @@ const dumpUserData = async (req,res) => {
         const rules = await Rules.findOne({org_id : id})
         const orgRules = rules.rules
         const xpValues = await _getXpValues(orgRules,actionableData)
-        // console.log(orgRules)
 
         res.status(200).json({xpValues})
     }catch (error){
@@ -167,6 +166,7 @@ const _getActionableData = async(walletData,githubDetails) => {
         const walletStats = walletData.walletStats[i].raw
         const githubData = githubDetails[i];
         const userObject = {
+             address : walletBalance.address,
              wallet_balance : walletBalance.balance_formatted,
              no_of_nfts : walletStats.nfts,
              no_of_transactions : walletStats.transactions.total,
@@ -175,9 +175,10 @@ const _getActionableData = async(walletData,githubDetails) => {
              github_followers : githubData.followers,
         };
 
+        console.log(userObject)
+
         userDataArray.push(userObject);
     }
-
     return userDataArray
 
 }
