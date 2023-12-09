@@ -19,6 +19,8 @@ import {
 import { LandingHero } from './components/LandingHero'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Dashboard from './components/Dashboard'
 
 const { chains, publicClient } = configureChains(
     [mainnet, polygon, optimism, arbitrum, base, zora],
@@ -69,7 +71,12 @@ function App() {
               backgroundColor='black'
             >
               <Navbar />
-              <LandingHero />
+              <Router>
+                <Routes>
+                  <Route path='/' element={<LandingHero />} />
+                  <Route path='/dashboard' element={<Dashboard />} />
+                </Routes>
+              </Router>
             </VStack>
           </ChakraProvider>
         </RainbowKitProvider>

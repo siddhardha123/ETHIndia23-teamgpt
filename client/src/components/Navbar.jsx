@@ -13,9 +13,14 @@ export const LandingNavbar = () => {
     <HStack
       style={{
         display: 'flex',
-        width: '98vw',
+        width: '100%',
+        position: 'fixed',
+        top: "25px",
+        left: '0',
+        background: 'rgba(0, 0, 0, 0.8)',
         justifyContent: 'space-around',
         alignItems: 'center',
+        zIndex: '1000',
       }}
     >
       <ChakraLink href='/' style={{ display: 'flex', alignItems: 'center' }}>
