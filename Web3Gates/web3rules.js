@@ -98,7 +98,6 @@ const  main = async (walletAdds) => {
    const walletStat = await  getWalletStats(walletAdds[walletAddress],0x13881)
    walletStats.push(walletStat)
  }
-
  return {walletBalance,walletStats}
   // await ensLookup();
   // await getWalletStats();
