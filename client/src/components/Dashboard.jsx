@@ -125,6 +125,15 @@ const DashboardPage = () => {
   const { address } = useAccount()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const handleSubmit = () => {
+    setShowSpinner(true)
+    randomizeAddresses()
+
+    setTimeout(() => {
+      setShowSpinner(false)
+    }, 3000)
+  }
+
   useEffect(() => {
     fetch(`http://localhost:3001/api/orgs/id/${address}`)
       .then((response) => response.json())
@@ -156,38 +165,38 @@ const DashboardPage = () => {
     setFields(updatedFields)
   }
 
-  const handleSubmit = () => {
-    const rules = fields.reduce((acc, field) => {
-      acc[Fields[field.option.toUpperCase().split(' ').join('_')]] = field.value
-      return acc
-    }, {})
+//   const handleSubmit = () => {
+//     const rules = fields.reduce((acc, field) => {
+//       acc[Fields[field.option.toUpperCase().split(' ').join('_')]] = field.value
+//       return acc
+//     }, {})
 
-    if (walletId) {
-      fetch(`http://localhost:3001/api/orgs/${walletId}/rules`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ rules }),
-      })
-        .then((response) => response.json())
-        .then((data) =>
-          toast.success(`${data.message}`, {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'dark',
-          })
-        )
-        .catch((error) => console.error('Error:', error))
-    } else {
-      console.error('Wallet ID not available')
-    }
-  }
+//     if (walletId) {
+//       fetch(`http://localhost:3001/api/orgs/${walletId}/rules`, {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ rules }),
+//       })
+//         .then((response) => response.json())
+//         .then((data) =>
+//           toast.success(`${data.message}`, {
+//             position: 'top-right',
+//             autoClose: 5000,
+//             hideProgressBar: false,
+//             closeOnClick: true,
+//             pauseOnHover: true,
+//             draggable: true,
+//             progress: undefined,
+//             theme: 'dark',
+//           })
+//         )
+//         .catch((error) => console.error('Error:', error))
+//     } else {
+//       console.error('Wallet ID not available')
+//     }
+//   }
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0]
@@ -511,52 +520,10 @@ const DashboardPage = () => {
           style={{ borderRadius: '200px', background: '#8575FF' }}
           color='white'
           mb='50px'
+          onClick={() => window.open('/collection')}
         >
           Proceed with Airdrop
         </Button>
-        {/* {fields.map((field, index) => (
-          <Flex key={index} alignItems='center'>
-            <Menu>
-              <MenuButton as={Button}>{field.option || 'Actions'}</MenuButton>
-              <MenuList>
-                {Object.keys(Fields)
-                  .filter((f) => !usedOptions.has(f))
-                  .map((key) => (
-                    <MenuItem
-                      key={key}
-                      onClick={() => handleFieldChange(index, 'option', key)}
-                    >
-                      {key.replace(/_/g, ' ').toLowerCase()}
-                    </MenuItem>
-                  ))}
-              </MenuList>
-            </Menu>
-            <Spacer />
-            <Input
-              type='number'
-              flex='2'
-              style={{ color: 'white' }}
-              value={field.value}
-              onChange={(e) =>
-                handleFieldChange(index, 'value', e.target.value)
-              }
-            />
-            <Spacer />
-            <Button onClick={() => handleRemoveRow(index)}>Remove</Button>
-          </Flex>
-        ))}
-        <VStack mt='50px'>
-          <Button maxW='150px' onClick={handleAddRow}>
-            Add Another Rule
-          </Button>
-          <HStack>
-            <Button as='label'>Upload CSV</Button>
-            <input type='file' accept='.csv' onChange={handleFileUpload} />
-          </HStack>
-          <Button maxW='10vw' onClick={handleSubmit}>
-            Submit
-          </Button>
-        </VStack> */}
       </VStack>
     </div>
   )

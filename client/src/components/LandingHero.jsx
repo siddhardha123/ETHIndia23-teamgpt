@@ -66,7 +66,7 @@ export const LandingHero = () => {
           lineHeight='normal'
           letterSpacing='0.7px'
         >
-          Effortlessly Target and Airdrop NFTs to your competitors power users
+          Effortlessly Target and Airdrop NFTs to your competitors&apos; power users
         </Text>
       </HStack>
 
@@ -97,9 +97,11 @@ export const LandingHero = () => {
             style={{ cursor: `${address && 'pointer'}` }}
           >
             {file ? (
-              <Text fontSize='20px' color='red'>
-                Remove uploaded file X
-              </Text>
+              <Box border='1px solid green' borderRadius='25px' padding='10px' ml='-30px'>
+                <Text fontSize='20px' color='green.400'>
+                  File uploaded
+                </Text>
+              </Box>
             ) : (
               <Text fontSize='20px' color='white'>
                 + Upload your Allowlist
@@ -127,7 +129,9 @@ export const LandingHero = () => {
           alignItems='center'
           cursor={address && 'pointer'}
         >
-          <Text color='white'>Inspect</Text>
+          <Text color='white' onClick={() => window.open('/dashboard')}>
+            Inspect
+          </Text>
         </Box>
       </Box>
 
@@ -211,7 +215,12 @@ export const LandingHero = () => {
         minus molestiae!
       </chakra.p> */}
       <Box
-        style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '20px',
+          marginBottom: '20px',
+        }}
       >
         <OrgDetailsModal />
       </Box>

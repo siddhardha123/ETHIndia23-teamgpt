@@ -66,3 +66,32 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.modal-header
+{
+	border-bottom: 0;
+}
+.modal-content
+{
+    background-color: #212120;
+    color: #fff;
+    padding: 2rem !important;
+}
+.modal-content .form-control
+{
+	background-color: #2C2C2C;
+	color: #ffffff !important;
+	border: 1px solid #ced4da21;
+}
+.modal-footer
+{
+	border: 0;
+}
+.btn-main
+{
+	background: #8575FF;
+	padding: 0.75rem;
+	display: block;
+	width: 100% !important;
+	color: #fff;
+}

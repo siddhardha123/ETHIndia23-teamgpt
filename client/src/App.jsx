@@ -21,6 +21,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Dashboard from './components/Dashboard'
+import Collection from './components/Collection'
 
 const { chains, publicClient } = configureChains(
     [mainnet, polygon, optimism, arbitrum, base, zora],
@@ -56,7 +57,6 @@ const wagmiConfig = createConfig({
     publicClient,
 })
 
-
 function App() {
     return (
       <WagmiConfig config={wagmiConfig}>
@@ -75,6 +75,7 @@ function App() {
                 <Routes>
                   <Route path='/' element={<LandingHero />} />
                   <Route path='/dashboard' element={<Dashboard />} />
+                  <Route path='/collection' element={<Collection />} />
                 </Routes>
               </Router>
             </VStack>
