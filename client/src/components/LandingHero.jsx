@@ -1,21 +1,18 @@
 import {
   Box,
-  Flex,
   HStack,
-  Heading,
   Stack,
   Text,
   VStack,
 } from '@chakra-ui/react'
 import OrgDetailsModal from './OrgDetailsModal.jsx'
-import { useEffect, useState } from 'react'
-import Card from './Card.jsx'
+import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 export const LandingHero = () => {
-  const [orgs, setOrgs] = useState([])
+  // const [orgs, setOrgs] = useState([])
   const { address } = useAccount()
   const [file, setFile] = useState(false)
 
@@ -28,18 +25,18 @@ export const LandingHero = () => {
     }
   }
 
-  useEffect(() => {
-    fetch('http://localhost:3001/api/orgs').then((response) =>
-      response.json().then((data) => {
-        setOrgs(data)
-      })
-    )
-  })
+  // useEffect(() => {
+  //   fetch('http://localhost:3001/api/orgs').then((response) =>
+  //     response.json().then((data) => {
+  //       setOrgs(data)
+  //     })
+  //   )
+  // })
 
   return (
     <Stack
       px={8}
-      py={24}
+      py={0}
       mx='auto'
       mt='10vh'
       w={{ base: 'full', md: 11 / 12, xl: 9 / 12 }}
@@ -58,6 +55,18 @@ export const LandingHero = () => {
         >
           Vampire Attacks Simplified
           <span style={{ color: 'yellow' }}>.</span>
+        </Text>
+      </HStack>
+      <HStack display='flex' justifyContent='center'>
+        <Text
+          w='600px'
+          color='#FFF'
+          textAlign='center'
+          fontSize='18px'
+          lineHeight='normal'
+          letterSpacing='0.7px'
+        >
+          Effortlessly Target and Airdrop NFTs to your competitors power users
         </Text>
       </HStack>
 
@@ -88,8 +97,8 @@ export const LandingHero = () => {
             style={{ cursor: `${address && 'pointer'}` }}
           >
             {file ? (
-              <Text fontSize='20px' color='white'>
-                + Upload your Allow
+              <Text fontSize='20px' color='red'>
+                Remove uploaded file X
               </Text>
             ) : (
               <Text fontSize='20px' color='white'>
@@ -118,7 +127,7 @@ export const LandingHero = () => {
           alignItems='center'
           cursor={address && 'pointer'}
         >
-          <Text color='white'>Get Started</Text>
+          <Text color='white'>Inspect</Text>
         </Box>
       </Box>
 
@@ -202,11 +211,11 @@ export const LandingHero = () => {
         minus molestiae!
       </chakra.p> */}
       <Box
-        style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}
+        style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}
       >
         <OrgDetailsModal />
       </Box>
-      <Heading
+      {/* <Heading
         mb={6}
         mt='10vh'
         fontSize={{ base: '2xl', md: '4xl', lg: '6xl' }}
@@ -238,7 +247,7 @@ export const LandingHero = () => {
             />
           </Box>
         ))}
-      </Flex>
+      </Flex> */}
     </Stack>
   )
 }

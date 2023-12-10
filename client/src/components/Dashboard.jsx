@@ -1,27 +1,27 @@
 import { useEffect, useState } from 'react'
-import {
-  VStack,
-  Input,
-  Button,
-  Flex,
-  Spacer,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Text,
-  Heading,
-  HStack,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-} from '@chakra-ui/react'
+import { VStack, Input, HStack, Text, Box, Button } from '@chakra-ui/react'
 import { useAccount } from 'wagmi'
 import { ToastContainer, toast } from 'react-toastify'
 import Papa from 'papaparse'
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Checkbox,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  RadioGroup,
+  Radio,
+  Stack,
+} from '@chakra-ui/react'
 
 const Fields = {
   NO_OF_TXNS: 'no_of_transactions',
@@ -31,11 +31,99 @@ const Fields = {
   GITHUB_PUBLIC_REPOS: 'github_public_repos',
 }
 
+const FilterModal = ({ isOpen, onClose }) => {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent backgroundColor='gray.800' color='white'>
+        <ModalHeader>Add Filters</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          {/* Add your filter fields here */}
+          {/* Example of one filter field */}
+          <Stack spacing={4} mb='10px'>
+            <Checkbox>Number of Transactions</Checkbox>
+            <RadioGroup defaultValue='greater_than'>
+              <Stack spacing={5} direction='row'>
+                <Radio value='less_than'>Less than</Radio>
+                <Radio value='greater_than'>Greater than</Radio>
+              </Stack>
+            </RadioGroup>
+            <NumberInput defaultValue={2} min={0}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </Stack>
+          <Stack spacing={4} mb='10px'>
+            <Checkbox>NFTs Owned</Checkbox>
+            <RadioGroup defaultValue='greater_than'>
+              <Stack spacing={5} direction='row'>
+                <Radio value='less_than'>Less than</Radio>
+                <Radio value='greater_than'>Greater than</Radio>
+              </Stack>
+            </RadioGroup>
+            <NumberInput defaultValue={2} min={0}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </Stack>
+          <Stack spacing={4} mb='10px'>
+            <Checkbox>Domains Owned</Checkbox>
+            <RadioGroup defaultValue='greater_than'>
+              <Stack spacing={5} direction='row'>
+                <Radio value='less_than'>Less than</Radio>
+                <Radio value='greater_than'>Greater than</Radio>
+              </Stack>
+            </RadioGroup>
+            <NumberInput defaultValue={2} min={0}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </Stack>
+          <Stack spacing={4} mb='10px'>
+            <Checkbox>Token Holdings</Checkbox>
+            <RadioGroup defaultValue='greater_than'>
+              <Stack spacing={5} direction='row'>
+                <Radio value='less_than'>Less than</Radio>
+                <Radio value='greater_than'>Greater than</Radio>
+              </Stack>
+            </RadioGroup>
+            <NumberInput defaultValue={2} min={0}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </Stack>
+          {/* Repeat the above for each filter field */}
+        </ModalBody>
+        <ModalFooter>
+          <Button colorScheme='blue' mr={3} onClick={onClose}>
+            Close
+          </Button>
+          <Button onClick={onClose}>Calculate</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  )
+}
+
 const DashboardPage = () => {
   const [fields, setFields] = useState([{ option: '', value: '' }])
   const [usedOptions, setUsedOptions] = useState(new Set())
   const [walletId, setWalletId] = useState(null)
   const { address } = useAccount()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     fetch(`http://localhost:3001/api/orgs/id/${address}`)
@@ -134,206 +222,343 @@ const DashboardPage = () => {
       .catch((error) => console.error('Error:', error))
   }
 
-  const data = [
-    {
-      wallet_balance: '0.808680858499567549',
-      no_of_nfts: '3',
-      no_of_transactions: '54',
-      github_username: 'Abbigail73',
-      github_public_repos: '2',
-      github_followers: '6',
-      xp: 5240.251963077197,
-      level: 4,
-    },
-    {
-      wallet_balance: '0.0',
-      no_of_nfts: '0',
-      no_of_transactions: '0',
-      github_username: 'Roosevelt_Koss8',
-      github_public_repos: '7',
-      github_followers: '7',
-      xp: 0,
-      level: 0,
-    },
-    {
-      wallet_balance: '0.0',
-      no_of_nfts: '446',
-      no_of_transactions: '2454',
-      github_username: 'Jessica39',
-      github_public_repos: '3',
-      github_followers: '9',
-      xp: 0,
-      level: 0,
-    },
-    {
-      wallet_balance: '0.0',
-      no_of_nfts: '1964',
-      no_of_transactions: '4317',
-      github_username: 'Mercedes.Mayer',
-      github_public_repos: '3',
-      github_followers: '7',
-      xp: 0,
-      level: 0,
-    },
-    {
-      wallet_balance: '0.0',
-      no_of_nfts: '0',
-      no_of_transactions: '0',
-      github_username: 'Oceane15',
-      github_public_repos: '2',
-      github_followers: '4',
-      xp: 0,
-      level: 0,
-    },
-    {
-      wallet_balance: '0.0',
-      no_of_nfts: '0',
-      no_of_transactions: '0',
-      github_username: 'Vincent.Crooks93',
-      github_public_repos: '3',
-      github_followers: '1',
-      xp: 0,
-      level: 0,
-    },
-    {
-      wallet_balance: '0.0',
-      no_of_nfts: '0',
-      no_of_transactions: '0',
-      github_username: 'Kianna_Gleichner83',
-      github_public_repos: '9',
-      github_followers: '2',
-      xp: 0,
-      level: 0,
-    },
-    {
-      wallet_balance: '0.0',
-      no_of_nfts: '0',
-      no_of_transactions: '0',
-      github_username: 'Ansel50',
-      github_public_repos: '8',
-      github_followers: '3',
-      xp: 0,
-      level: 0,
-    },
-    {
-      wallet_balance: '0.0',
-      no_of_nfts: '0',
-      no_of_transactions: '0',
-      github_username: 'Corene.Lehner28',
-      github_public_repos: '9',
-      github_followers: '3',
-      xp: 0,
-      level: 0,
-    },
-    {
-      wallet_balance: '0.0',
-      no_of_nfts: '0',
-      no_of_transactions: '0',
-      github_username: 'Maribel.Raynor93',
-      github_public_repos: '4',
-      github_followers: '8',
-      xp: 0,
-      level: 0,
-    },
+  const addresses = [
+    '0x82E5679071DDD33ede88F9BCBC9C23a01bC9dc91',
+    '0x09EA01592ACDA28657e51097eBC10ec836Ee3D25',
+    '0x90F79bf6EB2c4f870365E785982E1f101E93b906',
+    '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC',
+    '0x07A7f58520C4AdC4Daf5c1612227Ab072A9a7309',
+    '0x8319355559482816Cf35aDCBaA7D6A0424630f44',
+    '0x2FBeBD38Fd059c93147e0A04d4B696E65940fEca',
+    '0xc960c864652359779F4Cb740b10fC39636946D89',
+    '0x4BdF93F9ADaCF46D6B1e6319712FbA4f8e20d315',
+    '0x6ac61422CF9770981838A8984402e3776CBBc204',
   ]
 
-  const DataTable = () => (
-    <Table variant='simple' colorScheme='teal'>
-      <Thead>
-        <Tr>
-          <Th>Wallet Balance</Th>
-          <Th>No. of NFTs</Th>
-          <Th>No. of Transactions</Th>
-          <Th>Github Username</Th>
-          <Th>Github Public Repos</Th>
-          <Th>Github Followers</Th>
-          <Th>XP</Th>
-          <Th>Level</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {data.map((item, index) => (
-          <Tr key={index}>
-            <Td color='white'>{parseFloat(item.wallet_balance).toFixed(2)}</Td>
-            <Td color='white'>{item.no_of_nfts}</Td>
-            <Td color='white'>{item.no_of_transactions}</Td>
-            <Td color='white'>{item.github_username}</Td>
-            <Td color='white'>{item.github_public_repos}</Td>
-            <Td color='white'>{item.github_followers}</Td>
-            <Td color='white'>{item.xp}</Td>
-            <Td color='white'>{item.level}</Td>
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
-  )
-
-
   return (
-    <VStack spacing={4} alignItems='stretch'>
-      <ToastContainer />
-      <Heading
-        mb={6}
-        fontSize={{ base: 'xl', md: '2xl', lg: '4xl' }}
-        fontWeight='bold'
-        lineHeight='none'
-        textAlign='center'
-        letterSpacing={{ base: 'normal', md: 'tight' }}
-        color='gray.600'
-        _dark={{
-          color: 'gray.100',
-        }}
-      >
-        - Input how much XP you want to equate for one unit of the action -
-      </Heading>
-      <Text fontSize={18} color='white'>
-        Example: 1 Unit of Action = X Score
-      </Text>
-
-      {fields.map((field, index) => (
-        <Flex key={index} alignItems='center'>
-          <Menu>
-            <MenuButton as={Button}>{field.option || 'Actions'}</MenuButton>
-            <MenuList>
-              {Object.keys(Fields)
-                .filter((f) => !usedOptions.has(f))
-                .map((key) => (
-                  <MenuItem
-                    key={key}
-                    onClick={() => handleFieldChange(index, 'option', key)}
-                  >
-                    {key.replace(/_/g, ' ').toLowerCase()}
-                  </MenuItem>
-                ))}
-            </MenuList>
-          </Menu>
-          <Spacer />
+    <div>
+      <VStack spacing={4} alignItems='stretch' mt='100px'>
+        <ToastContainer />
+        <Box
+          w='70vw'
+          h='70px'
+          display='flex'
+          justifyContent='space-between'
+          p='20px'
+          alignItems='center'
+          style={{
+            background: 'rgba(255, 255, 255, 0.06)',
+            borderRadius: '50px',
+          }}
+          cursor={!address && 'not-allowed'}
+          opacity={!address && '15%'}
+        >
+          <Box
+            w='250px'
+            h='50px'
+            display='flex'
+            justifyContent='center'
+            alignItems='center'
+            cursor={address && 'pointer'}
+          >
+            <label
+              htmlFor='file-upload'
+              style={{
+                cursor: `${address && 'pointer'}`,
+                border: '1px solid red',
+                borderRadius: '50px',
+                padding: '10px',
+              }}
+            >
+              <Text fontSize='20px' color='red'>
+                Remove file X
+              </Text>
+            </label>
+            <input
+              id='file-upload'
+              type='file'
+              accept='.csv'
+              disabled={!address}
+              style={{ display: 'none' }}
+              onChange={handleFileUpload}
+            />
+          </Box>
           <Input
-            type='number'
-            flex='2'
-            style={{ color: 'white' }}
-            value={field.value}
-            onChange={(e) => handleFieldChange(index, 'value', e.target.value)}
+            border='none'
+            focusBorderColor='none'
+            color='white'
+            backgroundColor='rgba(255, 255, 255, 0.06)'
+            mr='10px'
           />
-          <Spacer />
-          <Button onClick={() => handleRemoveRow(index)}>Remove</Button>
-        </Flex>
-      ))}
-      <VStack mt='50px'>
-        <Button maxW='150px' onClick={handleAddRow}>
-          Add Another Rule
-        </Button>
+          <Box
+            w='150px'
+            h='50px'
+            style={{
+              backgroundColor: '#8575FF',
+              borderRadius: '50px',
+            }}
+            display='flex'
+            justifyContent='center'
+            alignItems='center'
+            cursor={address && 'pointer'}
+          >
+            <Text color='white'>Query</Text>
+          </Box>
+        </Box>
+        <Text color='white'>Suggestions</Text>
         <HStack>
-          <Button as='label'>Upload CSV</Button>
-          <input type='file' accept='.csv' onChange={handleFileUpload} />
+          <Box
+            style={{
+              borderRadius: '200px',
+              border: '1px solid #545454',
+              color: 'white',
+              padding: '8px',
+              fontSize: '12px',
+              cursor: 'pointer',
+            }}
+          >
+            Holders of Axie Infinity
+          </Box>
+          <Box
+            style={{
+              borderRadius: '200px',
+              border: '1px solid #545454',
+              color: 'white',
+              padding: '8px',
+              fontSize: '12px',
+              cursor: 'pointer',
+            }}
+          >
+            Holders of CryptoPunks
+          </Box>
         </HStack>
-        {/* Add table below */}
-        <DataTable />
-        <Button maxW='10vw' onClick={handleSubmit}>
-          Submit
+        <HStack mt='50px'>
+          <VStack>
+            <Text color='white'>Community Stats</Text>
+            <Box
+              maxW='xs'
+              overflow='hidden'
+              p={6}
+              bg='gray.700'
+              background='rgba(255, 255, 255, 0.06)'
+              color='white'
+              borderRadius='30px'
+            >
+              <VStack
+                spacing={4}
+                align='flex-start'
+                display='flex'
+                justifyContent='center'
+              >
+                <Text fontSize='24px' fontWeight='bold'>
+                  Market Cap
+                </Text>
+                <Text fontSize='16px'>23.5</Text>
+              </VStack>
+            </Box>
+            <Box
+              maxW='xs'
+              overflow='hidden'
+              p={6}
+              bg='gray.700'
+              background='rgba(255, 255, 255, 0.06)'
+              color='white'
+              borderRadius='30px'
+            >
+              <VStack
+                spacing={4}
+                align='flex-start'
+                display='flex'
+                justifyContent='center'
+              >
+                <Text fontSize='24px' fontWeight='bold'>
+                  Total Trxns
+                </Text>
+                <Text fontSize='16px'>23.2k</Text>
+              </VStack>
+            </Box>
+            <Box
+              maxW='xs'
+              overflow='hidden'
+              p={6}
+              bg='gray.700'
+              background='rgba(255, 255, 255, 0.06)'
+              color='white'
+              borderRadius='30px'
+            >
+              <VStack
+                spacing={4}
+                align='flex-start'
+                display='flex'
+                justifyContent='center'
+              >
+                <Text fontSize='24px' fontWeight='bold'>
+                  ENS Owned{' '}
+                </Text>
+                <Text fontSize='16px'>23.2k</Text>
+              </VStack>
+            </Box>
+          </VStack>
+          <VStack>
+            <Text color='black'>-</Text>
+            <Box
+              maxW='xs'
+              overflow='hidden'
+              p={6}
+              bg='gray.700'
+              background='rgba(255, 255, 255, 0.06)'
+              color='white'
+              borderRadius='30px'
+            >
+              <VStack
+                spacing={4}
+                align='flex-start'
+                display='flex'
+                justifyContent='center'
+              >
+                <Text fontSize='24px' fontWeight='bold'>
+                  Wallet Balance{' '}
+                </Text>
+                <Text fontSize='16px'>23.5</Text>
+              </VStack>
+            </Box>
+            <Box
+              maxW='xs'
+              overflow='hidden'
+              p={6}
+              bg='gray.700'
+              background='rgba(255, 255, 255, 0.06)'
+              color='white'
+              borderRadius='30px'
+            >
+              <VStack
+                spacing={4}
+                align='flex-start'
+                display='flex'
+                justifyContent='center'
+              >
+                <Text fontSize='24px' fontWeight='bold'>
+                  No of NFTs{' '}
+                </Text>
+                <Text fontSize='16px'>23.5</Text>
+              </VStack>
+            </Box>
+            <Box
+              maxW='xs'
+              overflow='hidden'
+              p={6}
+              bg='gray.700'
+              background='rgba(255, 255, 255, 0.06)'
+              color='white'
+              borderRadius='30px'
+            >
+              <VStack
+                spacing={4}
+                align='flex-start'
+                display='flex'
+                justifyContent='center'
+              >
+                <Text fontSize='24px' fontWeight='bold'>
+                  XMTP Owned{' '}
+                </Text>
+                <Text fontSize='16px'>23.5</Text>
+              </VStack>
+            </Box>
+          </VStack>
+          <VStack ml='10px'>
+            <Text color='black'>Total wallets - 125</Text>
+            <Box
+              w='650px'
+              h='500px'
+              overflow='hidden'
+              p={6}
+              bg='gray.700'
+              background='rgba(255, 255, 255, 0.06)'
+              color='white'
+              borderRadius='30px'
+            >
+              <VStack
+                spacing={4}
+                align='flex-start'
+                display='flex'
+                justifyContent='center'
+              >
+                <Text fontSize='24px' fontWeight='bold'>
+                  Wallets
+                </Text>
+                {addresses.map((address) => (
+                  <Text key={address}>
+                    {`${address.slice(0, 7)}...${address.slice(-7)}`}
+                  </Text>
+                ))}
+              </VStack>
+            </Box>
+          </VStack>
+        </HStack>
+        <Button
+          width='377px'
+          height='60px'
+          style={{ borderRadius: '25px', background: '#212121' }}
+          color='white'
+          mt='-30px'
+          onClick={onOpen} // Add this line to your Add Filters button
+        >
+          Add Filters
         </Button>
+        <FilterModal isOpen={isOpen} onClose={onClose} />
+        <Button
+          width='full'
+          style={{ borderRadius: '200px', background: '#8575FF' }}
+          color='white'
+          mb='50px'
+        >
+          Proceed with Airdrop
+        </Button>
+        {/* {fields.map((field, index) => (
+          <Flex key={index} alignItems='center'>
+            <Menu>
+              <MenuButton as={Button}>{field.option || 'Actions'}</MenuButton>
+              <MenuList>
+                {Object.keys(Fields)
+                  .filter((f) => !usedOptions.has(f))
+                  .map((key) => (
+                    <MenuItem
+                      key={key}
+                      onClick={() => handleFieldChange(index, 'option', key)}
+                    >
+                      {key.replace(/_/g, ' ').toLowerCase()}
+                    </MenuItem>
+                  ))}
+              </MenuList>
+            </Menu>
+            <Spacer />
+            <Input
+              type='number'
+              flex='2'
+              style={{ color: 'white' }}
+              value={field.value}
+              onChange={(e) =>
+                handleFieldChange(index, 'value', e.target.value)
+              }
+            />
+            <Spacer />
+            <Button onClick={() => handleRemoveRow(index)}>Remove</Button>
+          </Flex>
+        ))}
+        <VStack mt='50px'>
+          <Button maxW='150px' onClick={handleAddRow}>
+            Add Another Rule
+          </Button>
+          <HStack>
+            <Button as='label'>Upload CSV</Button>
+            <input type='file' accept='.csv' onChange={handleFileUpload} />
+          </HStack>
+          <Button maxW='10vw' onClick={handleSubmit}>
+            Submit
+          </Button>
+        </VStack> */}
       </VStack>
-    </VStack>
+    </div>
   )
 }
 

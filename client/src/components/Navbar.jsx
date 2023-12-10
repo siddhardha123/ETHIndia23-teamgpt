@@ -37,10 +37,10 @@ export const LandingNavbar = () => {
         />
         <Heading as='h1' fontSize='3xl' fontWeight='bold'>
           <Box as='span' color='white'>
-            Out
+            Cross
           </Box>
           <Box as='span' color='purple.500'>
-            Reach
+            Drop.
           </Box>
         </Heading>
       </ChakraLink>
