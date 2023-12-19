@@ -1,5 +1,15 @@
 import { useEffect, useState } from 'react'
-import { VStack, Input, HStack, Text, Box, Button } from '@chakra-ui/react'
+import {
+  VStack,
+  Input,
+  HStack,
+  Text,
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Switch,
+} from '@chakra-ui/react'
 import { useAccount } from 'wagmi'
 import { ToastContainer, toast } from 'react-toastify'
 import Papa from 'papaparse'
@@ -33,23 +43,39 @@ const Fields = {
 
 const FilterModal = ({ isOpen, onClose }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent backgroundColor='gray.800' color='white'>
+    <Modal isOpen={isOpen} onClose={onClose} size='xl'>
+      <ModalOverlay style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }} />
+      <ModalContent
+        backgroundColor='#212121'
+        color='white'
+        paddingTop='20px'
+        pb='20px'
+        borderRadius='20px'
+      >
         <ModalHeader>Add Filters</ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton margin='15px' />
         <ModalBody>
-          {/* Add your filter fields here */}
-          {/* Example of one filter field */}
-          <Stack spacing={4} mb='10px'>
-            <Checkbox>Number of Transactions</Checkbox>
-            <RadioGroup defaultValue='greater_than'>
-              <Stack spacing={5} direction='row'>
-                <Radio value='less_than'>Less than</Radio>
-                <Radio value='greater_than'>Greater than</Radio>
-              </Stack>
-            </RadioGroup>
-            <NumberInput defaultValue={2} min={0}>
+          <Stack display='flex' flexDirection='row' spacing={4} mb='10px'>
+            <Checkbox flexShrink={0} width={'220px'}>
+              No. of Transactions
+            </Checkbox>
+            <FormControl display='flex' alignItems='center'>
+              <FormLabel htmlFor='toggle' mb='0'>
+                Less than
+              </FormLabel>
+              <Switch
+                id='toggle'
+                // onChange={handleChange}
+                // isChecked={isGreaterThan}
+              />
+              <Text ml={2}>{'Greater than'}</Text>
+            </FormControl>
+            <NumberInput
+              backgroundColor='rgba(255, 255, 255, 0.05)'
+              defaultValue={1}
+              min={0}
+              width={'150px'}
+            >
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -57,15 +83,27 @@ const FilterModal = ({ isOpen, onClose }) => {
               </NumberInputStepper>
             </NumberInput>
           </Stack>
-          <Stack spacing={4} mb='10px'>
-            <Checkbox>NFTs Owned</Checkbox>
-            <RadioGroup defaultValue='greater_than'>
-              <Stack spacing={5} direction='row'>
-                <Radio value='less_than'>Less than</Radio>
-                <Radio value='greater_than'>Greater than</Radio>
-              </Stack>
-            </RadioGroup>
-            <NumberInput defaultValue={2} min={0}>
+          <Stack display='flex' flexDirection='row' spacing={4} mb='10px'>
+            <Checkbox flexShrink={0} width={'220px'}>
+              NFTs Owned
+            </Checkbox>
+            <FormControl display='flex' alignItems='center'>
+              <FormLabel htmlFor='toggle' mb='0'>
+                Less than
+              </FormLabel>
+              <Switch
+                id='toggle'
+                // onChange={handleChange}
+                // isChecked={isGreaterThan}
+              />
+              <Text ml={2}>{'Greater than'}</Text>
+            </FormControl>
+            <NumberInput
+              backgroundColor='rgba(255, 255, 255, 0.05)'
+              defaultValue={1}
+              min={0}
+              width={'150px'}
+            >
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -73,15 +111,27 @@ const FilterModal = ({ isOpen, onClose }) => {
               </NumberInputStepper>
             </NumberInput>
           </Stack>
-          <Stack spacing={4} mb='10px'>
-            <Checkbox>Domains Owned</Checkbox>
-            <RadioGroup defaultValue='greater_than'>
-              <Stack spacing={5} direction='row'>
-                <Radio value='less_than'>Less than</Radio>
-                <Radio value='greater_than'>Greater than</Radio>
-              </Stack>
-            </RadioGroup>
-            <NumberInput defaultValue={2} min={0}>
+          <Stack display='flex' flexDirection='row' spacing={4} mb='10px'>
+            <Checkbox flexShrink={0} width={'220px'}>
+              Domains Owned
+            </Checkbox>
+            <FormControl display='flex' alignItems='center'>
+              <FormLabel htmlFor='toggle' mb='0'>
+                Less than
+              </FormLabel>
+              <Switch
+                id='toggle'
+                // onChange={handleChange}
+                // isChecked={isGreaterThan}
+              />
+              <Text ml={2}>{'Greater than'}</Text>
+            </FormControl>
+            <NumberInput
+              backgroundColor='rgba(255, 255, 255, 0.05)'
+              defaultValue={1}
+              min={0}
+              width={'150px'}
+            >
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -89,15 +139,27 @@ const FilterModal = ({ isOpen, onClose }) => {
               </NumberInputStepper>
             </NumberInput>
           </Stack>
-          <Stack spacing={4} mb='10px'>
-            <Checkbox>Token Holdings</Checkbox>
-            <RadioGroup defaultValue='greater_than'>
-              <Stack spacing={5} direction='row'>
-                <Radio value='less_than'>Less than</Radio>
-                <Radio value='greater_than'>Greater than</Radio>
-              </Stack>
-            </RadioGroup>
-            <NumberInput defaultValue={2} min={0}>
+          <Stack display='flex' flexDirection='row' spacing={4} mb='10px'>
+            <Checkbox flexShrink={0} width={'220px'}>
+              Token Holdings
+            </Checkbox>
+            <FormControl display='flex' alignItems='center'>
+              <FormLabel htmlFor='toggle' mb='0'>
+                Less than
+              </FormLabel>
+              <Switch
+                id='toggle'
+                // onChange={handleChange}
+                // isChecked={isGreaterThan}
+              />
+              <Text ml={2}>{'Greater than'}</Text>
+            </FormControl>
+            <NumberInput
+              backgroundColor='rgba(255, 255, 255, 0.05)'
+              defaultValue={1}
+              min={0}
+              width={'150px'}
+            >
               <NumberInputField />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -108,10 +170,14 @@ const FilterModal = ({ isOpen, onClose }) => {
           {/* Repeat the above for each filter field */}
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme='blue' mr={3} onClick={onClose}>
-            Close
+          <Button
+            width='full'
+            style={{ borderRadius: '200px', background: '#8575FF' }}
+            color='white'
+            onClick={onClose}
+          >
+            Calculate
           </Button>
-          <Button onClick={onClose}>Calculate</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
@@ -165,38 +231,38 @@ const DashboardPage = () => {
     setFields(updatedFields)
   }
 
-//   const handleSubmit = () => {
-//     const rules = fields.reduce((acc, field) => {
-//       acc[Fields[field.option.toUpperCase().split(' ').join('_')]] = field.value
-//       return acc
-//     }, {})
+  //   const handleSubmit = () => {
+  //     const rules = fields.reduce((acc, field) => {
+  //       acc[Fields[field.option.toUpperCase().split(' ').join('_')]] = field.value
+  //       return acc
+  //     }, {})
 
-//     if (walletId) {
-//       fetch(`http://localhost:3001/api/orgs/${walletId}/rules`, {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ rules }),
-//       })
-//         .then((response) => response.json())
-//         .then((data) =>
-//           toast.success(`${data.message}`, {
-//             position: 'top-right',
-//             autoClose: 5000,
-//             hideProgressBar: false,
-//             closeOnClick: true,
-//             pauseOnHover: true,
-//             draggable: true,
-//             progress: undefined,
-//             theme: 'dark',
-//           })
-//         )
-//         .catch((error) => console.error('Error:', error))
-//     } else {
-//       console.error('Wallet ID not available')
-//     }
-//   }
+  //     if (walletId) {
+  //       fetch(`http://localhost:3001/api/orgs/${walletId}/rules`, {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({ rules }),
+  //       })
+  //         .then((response) => response.json())
+  //         .then((data) =>
+  //           toast.success(`${data.message}`, {
+  //             position: 'top-right',
+  //             autoClose: 5000,
+  //             hideProgressBar: false,
+  //             closeOnClick: true,
+  //             pauseOnHover: true,
+  //             draggable: true,
+  //             progress: undefined,
+  //             theme: 'dark',
+  //           })
+  //         )
+  //         .catch((error) => console.error('Error:', error))
+  //     } else {
+  //       console.error('Wallet ID not available')
+  //     }
+  //   }
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0]

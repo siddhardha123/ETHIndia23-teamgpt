@@ -2,6 +2,27 @@ import { useState } from 'react'
 import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  HStack,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Radio,
+  RadioGroup,
+  Stack,
+  Text,
+  useDisclosure,
+  VStack,
+} from '@chakra-ui/react'
 
 function Collection() {
   const [showModal, setShowModal] = useState(false)
@@ -11,6 +32,8 @@ function Collection() {
   const [collectionName, setCollectionName] = useState('test')
   const [collectionDescription, setCollectionDescription] = useState('test')
   const [chain, setChain] = useState('polygon')
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [modalValue, setModalValue] = useState(0)
 
   const toggleModal = () => setShowModal(!showModal)
 
@@ -37,13 +60,241 @@ function Collection() {
     }
   }
 
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    // Add logic to handle the submit
+  }
+
   return (
     <>
-      <button className='btn btn-primary' onClick={toggleModal}>
+      <button className='btn btn-primary' onClick={onOpen}>
         Create a collection
       </button>
 
-      {showModal ? (
+      <Modal isOpen={isOpen} onClose={onClose} size='xl'>
+        <ModalOverlay />
+        {modalValue === 0 ? (
+          <ModalContent backgroundColor='#212121' color='white'>
+            <HStack
+              display='flex'
+              justifyContent='space-evenly'
+              alignItems='center'
+              mt='20px'
+              mb='20px'
+              w='60%'
+            >
+              <Text cursor='pointer'> 1. Create a collection</Text>
+              <Text
+                cursor='pointer'
+                color='#6A6A6A'
+                onClick={() => setModalValue(1)}
+              >
+                2. Airdrop NFTs
+              </Text>
+            </HStack>
+            <Text color='#6A6A6A' ml='30px'>
+              Start by creating an NFT collection.
+            </Text>
+
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              <HStack
+                display='flex'
+                justifyContent='space-between'
+                alignItems='center'
+              >
+                <VStack>
+                  <Box
+                    border='1px dashed #454545'
+                    height='320px'
+                    width='240px'
+                    borderRadius='10px'
+                    display='flex'
+                    justifyContent='center'
+                    alignItems='center'
+                    cursor='pointer'
+                  >
+                    <Text fontSize='60px' color='gray' fontWeight={100}>
+                      +
+                    </Text>
+                  </Box>
+                </VStack>
+                <VStack>
+                  <FormControl>
+                    <FormLabel color='#6A6A6A'>
+                      Collection Name (32 chars)
+                    </FormLabel>
+                    <Input
+                      placeholder='Enter collection name'
+                      maxLength={32}
+                      value={collectionName}
+                      border='none'
+                      borderRadius='15px'
+                      backgroundColor='#2B2B2B'
+                      onChange={(e) => setCollectionName(e.target.value)}
+                    />
+                  </FormControl>
+
+                  <FormControl mt={4}>
+                    <FormLabel color='#6A6A6A'>
+                      Collection Description
+                    </FormLabel>
+                    <Input
+                      placeholder='Enter collection description'
+                      value={collectionDescription}
+                      border='none'
+                      borderRadius='15px'
+                      backgroundColor='#2B2B2B'
+                      onChange={(e) => setCollectionDescription(e.target.value)}
+                    />
+                  </FormControl>
+
+                  <FormControl mt={4}>
+                    <FormLabel color='#6A6A6A'>Choose chain</FormLabel>
+                    <RadioGroup onChange={setChain} value={chain}>
+                      <Stack direction='row' gap={5}>
+                        <Radio value='polygon'>Polygon</Radio>
+                        <Radio value='base'>Base</Radio>
+                        <Radio value='arbitrum'>Arbitrum</Radio>
+                      </Stack>
+                    </RadioGroup>
+                  </FormControl>
+                </VStack>
+              </HStack>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                width='full'
+                style={{ borderRadius: '200px', background: '#8575FF' }}
+                color='white'
+                onClick={handleSubmit}
+              >
+                Deploy Collection
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        ) : (
+          <ModalContent backgroundColor='#212121' color='white'>
+            <HStack
+              display='flex'
+              justifyContent='space-evenly'
+              alignItems='center'
+              mt='20px'
+              mb='20px'
+              w='60%'
+            >
+              <Text
+                cursor='pointer'
+                onClick={() => setModalValue(0)}
+                color='#6A6A6A'
+              >
+                1. Create a collection
+              </Text>
+              <Text cursor='pointer'> 2. Airdrop NFTs</Text>
+            </HStack>
+            <Text color='#6A6A6A' ml='30px'>
+              Your collection is deployed! Add details of your NFT to airdrop
+              them to the wallets.
+            </Text>
+
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+              <HStack
+                display='flex'
+                justifyContent='space-between'
+                alignItems='center'
+              >
+                <VStack>
+                  <Box
+                    border='1px dashed #454545'
+                    height='320px'
+                    width='240px'
+                    borderRadius='10px'
+                    display='flex'
+                    justifyContent='center'
+                    alignItems='center'
+                    cursor='pointer'
+                  >
+                    <Text fontSize='60px' color='gray' fontWeight={100}>
+                      +
+                    </Text>
+                  </Box>
+                </VStack>
+                <VStack>
+                  <FormControl>
+                    <FormLabel color='#6A6A6A'>
+                      Collection Name (32 chars)
+                    </FormLabel>
+                    <Input
+                      placeholder='Enter collection name'
+                      maxLength={32}
+                      value={collectionName}
+                      border='none'
+                      borderRadius='15px'
+                      backgroundColor='#2B2B2B'
+                      onChange={(e) => setCollectionName(e.target.value)}
+                    />
+                  </FormControl>
+
+                  <FormControl mt={4}>
+                    <FormLabel color='#6A6A6A'>
+                      Collection Description
+                    </FormLabel>
+                    <Input
+                      placeholder='Enter collection description'
+                      value={collectionDescription}
+                      border='none'
+                      borderRadius='15px'
+                      backgroundColor='#2B2B2B'
+                      onChange={(e) => setCollectionDescription(e.target.value)}
+                    />
+                  </FormControl>
+
+                  <FormControl mt={4}>
+                    <FormLabel color='#6A6A6A'>Traits</FormLabel>
+                    <HStack>
+                      <Input
+                        placeholder='Key'
+                        // value={'Key'}
+                        border='none'
+                        borderRadius='15px'
+                        backgroundColor='#2B2B2B'
+                        onChange={(e) =>
+                          setCollectionDescription(e.target.value)
+                        }
+                      />
+                      <Input
+                        placeholder='Value'
+                        // value={'Value'}
+                        border='none'
+                        borderRadius='15px'
+                        backgroundColor='#2B2B2B'
+                        onChange={(e) =>
+                          setCollectionDescription(e.target.value)
+                        }
+                      />
+                    </HStack>
+                  </FormControl>
+                </VStack>
+              </HStack>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                width='full'
+                style={{ borderRadius: '200px', background: '#8575FF' }}
+                color='white'
+                onClick={handleSubmit}
+              >
+                Mint
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        )}
+      </Modal>
+
+      {/* {showModal ? (
         <div className='modal show d-block' tabIndex='-1'>
           <div className='modal-dialog modal-dialog-centered'>
             <div className='modal-content'>
@@ -161,7 +412,7 @@ function Collection() {
         </div>
       ) : null}
 
-      {showModal ? <div className='modal-backdrop show'></div> : null}
+      {showModal ? <div className='modal-backdrop show'></div> : null} */}
     </>
   )
 }
