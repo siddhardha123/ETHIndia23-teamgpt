@@ -6,4 +6,4 @@ query MyQuery($_eq: Identity, $_eq1: Address, $blockchain: TokenBlockchain!, $li
       blockTimestamp
     }
   }
-}
+} 
